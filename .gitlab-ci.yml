@@ -1,0 +1,7 @@
+build:
+  stage: build
+  script: 
+    - chmod +x build.sh
+    - ./build.sh -configuration Release
+  tags:
+    - dotnet

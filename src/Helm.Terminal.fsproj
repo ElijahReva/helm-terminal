@@ -1,0 +1,73 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <AssemblyName>helm-terminal</AssemblyName>
+    <OutputType>Exe</OutputType>
+    <PackageId>helm-terminal</PackageId>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.4" />
+    <PackageReference Include="Giraffe" Version="3.1.0" />
+    <PackageReference Include="SwaggerForFsharp.Giraffe" Version="1.0.0-CI00007" />
+    
+    <PackageReference Include="Ben.Demystifier" Version="0.1.1" />
+    
+    <PackageReference Include="Serilog" Version="2.7.1" />
+    <PackageReference Include="Serilog.AspNetCore" Version="2.1.1" />
+    <PackageReference Include="Serilog.Enrichers.Demystify" Version="0.1.0-dev-00011" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
+    
+    <PackageReference Update="FSharp.Core" Version="4.5.2" />
+    <PackageReference Update="System.ValueTuple" Version="4.5.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Frontend\**\*" />
+    <Compile Include="Backend\Log.fs" />
+    <Compile Include="Backend\DOM.fs" />
+    <Compile Include="Backend\App.fs" />
+    <Compile Include="Bootstrap.fs" />
+    <Compile Include="Program.fs" />
+    <Content Include=".babelrc" />
+    <Content Include="webpack.config.js" />
+    <Content Include=".eslintrc.js" />
+  </ItemGroup>
+  <Target Name="DebugRunWebpack" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('wwwroot\dist') ">
+    <!-- Ensure Node.js is installed -->
+    <Exec Command="node --version" ContinueOnError="true">
+      <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
+    </Exec>
+    <Error Condition="'$(ErrorCode)' != '0'" Text="Node.js is required to build and run this project. To continue, please install Node.js from https://nodejs.org/, and then restart your command prompt or IDE." />
+    <!-- In development, the dist files won't exist on the first run or when cloning to 
+         a different machine, so rebuild them if not already present. -->
+    <Message Importance="high" Text="Performing first-run Webpack build..." />
+    <Exec Command="node node_modules/webpack/bin/webpack.js --config webpack.config.js" />
+  </Target>
+  <Target Name="RunNpm" BeforeTargets="DebugRunWebpack" Condition=" '$(Configuration)' == 'Debug' And !Exists('node_modules') ">
+    <!-- Ensure Node.js is installed -->
+    <Exec Command="node --version" ContinueOnError="true">
+      <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
+    </Exec>
+    <Error Condition="'$(ErrorCode)' != '0'" Text="Node.js is required to build and run this project. To continue, please install Node.js from https://nodejs.org/, and then restart your command prompt or IDE." />
+    <!-- In development, the dist files won't exist on the first run or when cloning to 
+         a different machine, so rebuild them if not already present. -->
+    <Exec Command="npm install" />
+  </Target>
+  <Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
+    <!-- Ensure Node.js is installed -->
+    <Exec Command="node --version" ContinueOnError="true">
+      <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
+    </Exec>
+    <Error Condition="'$(ErrorCode)' != '0'" Text="Node.js is required to build and run this project. To continue, please install Node.js from https://nodejs.org/, and then restart your command prompt or IDE." />
+    <!-- As part of publishing, ensure the JS resources are freshly built in production mode -->
+    <Exec Command="npm install" />
+    <Exec Command="node node_modules/webpack/bin/webpack.js --config webpack.config.js --env.prod" />
+    <!-- Include the newly-built files in the publish output -->
+    <ItemGroup>
+      <DistFiles Include="wwwroot\dist\**; ClientApp\**" />
+      <ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
+        <RelativePath>%(DistFiles.Identity)</RelativePath>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </ResolvedFileToPublish>
+    </ItemGroup>
+  </Target>
+</Project>
