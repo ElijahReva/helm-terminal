@@ -41,7 +41,7 @@
                     <button 
                         class="ui button" 
                         :class="action.color" 
-                        :type="action.type">
+                        :type="action.type"> 
                             {{ action.text }}
                     </button>
                 </template>
