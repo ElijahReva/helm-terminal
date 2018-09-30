@@ -15,7 +15,7 @@ export const getters = {
             return {
                 path: '/' + tab,
                 title: tab.replace(/^\w/, c => c.toUpperCase()),
-                isActive: rootState.route.path.endsWith(tab)
+                isActive: rootState.route ? rootState.route.path.endsWith(tab) : true
             }
         })
     },

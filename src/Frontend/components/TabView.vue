@@ -25,7 +25,7 @@ let $ = JQuery;
 
 export default {
     name: 'TabView',
-    computed: mapGetters(['tabs']),    
+    computed: mapGetters('nav', ['tabs']),    
 }
 </script>
 

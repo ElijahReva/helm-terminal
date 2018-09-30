@@ -13,27 +13,13 @@
     </div>
 </template>
 
-<script>
+<script>    
+    import { mapGetters, mapState } from 'vuex'
     export default {
         name: "ChartList",
-        data() {
-            return {
-                charts: [
-                    { name: "env-man", revision: 323, status: "Deployed", date: Date.now() },
-                    { name: "sym-dash", revision: 323, status: "Deployed", date: Date.now() },
-                    { name: "sym-identity", revision: 323, status: "Deployed", date: Date.now() },
-                    { name: "sym-identity", revision: 323, status: "Deployed", date: Date.now() },
-                    { name: "sym-identity", revision: 323, status: "Deployed", date: Date.now() },
-                    { name: "sym-identity", revision: 323, status: "Deployed", date: Date.now() },
-                    { name: "sym-identity", revision: 323, status: "Deployed", date: Date.now() },
-                    { name: "sym-identity", revision: 323, status: "Deployed", date: Date.now() },
-                    { name: "sym-identity", revision: 323, status: "Deployed", date: Date.now() },
-                    { name: "sym-identity", revision: 323, status: "Deployed", date: Date.now() },
-                    { name: "sym-identity", revision: 323, status: "Deployed", date: Date.now() },
-                    { name: "sym-identity", revision: 323, status: "Deployed", date: Date.now() },
-                ]
-            }
-        },
+        computed: {
+            ...mapState('manager', [ 'charts' ])
+        }
     }
 </script>
 

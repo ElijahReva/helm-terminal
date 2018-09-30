@@ -5,24 +5,25 @@
     </div>       
 </template>
 
+
 <script>
-import JQuery from 'jquery'
-import ActionMenu from "./ActionMenu";
-import ChartList from "./ChartList";
-let $ = JQuery;
+    
+    import ActionMenu from "./ActionMenu";
+    import ChartList from "./ChartList";
+    import JQuery from 'jquery'
+    let $ = JQuery;
 
-export default {
-    name: 'Main',
-    components: {ChartList, ActionMenu},
-    mounted(){      
-        $('.overlay').visibility({
-          type: 'fixed',
-          offset: 80
-        })
-  }
-}
+    export default {
+        name: 'Main',
+        components: {ChartList, ActionMenu},
+        mounted(){
+            $('.overlay').visibility({
+                type: 'fixed',
+                offset: 80
+            })
+        }
+    }
 </script>
-
 <style scoped>
 .overlay {
   float: left;

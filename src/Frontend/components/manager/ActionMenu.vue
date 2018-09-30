@@ -6,7 +6,7 @@
             </div>            
             <div class="item">
                 <div class="ui header  content">
-                    Chart Name
+                    {{ currentChart }}
                     <div class="sub header">Last update date</div>
                 </div>
             </div>
@@ -14,32 +14,34 @@
                 <div class="item">
                     <button class="ui labeled icon button" :class="yamlButtonColor" v-on:click="showYaml">
                         <i class="file outline icon"></i>
-                        Show yaml
+                        {{ yamlButtonText }}
                     </button>
                 </div>
             </div>
         </div>        
-        <form class="ui form warning">
+        <form class="ui form error">
             <div class="field yamlForm">
                 <div class="field">
                     <label>Values</label>
                     <codemirror
+                            name="code"
                             rows="2"
-                            :value="code"
+                            v-model="yaml"
+                            v-on:input-read="onYamlChange()"
                             :options="cmOptions"
                     />
                 </div>
             </div>
-            <div class="ui warning message">
+            <div class="ui error message" v-if="hasErrors">
                 <div class="header">Invalid yaml!</div>
                 <ul class="list">
-                    <li>That e-mail has been subscribed, but you have not yet clicked the verification link in your e-mail.</li>
+                    <li>{{ whyYouCant }}</li>
                 </ul>
             </div>
             <div class="ui horizontal list">
-                <template v-for="action in actions">
+                <template v-for="action in currentActions">
                     <button 
-                        class="ui button" 
+                        class="ui submit button" 
                         :class="action.color" 
                         :type="action.type"> 
                             {{ action.text }}
@@ -53,39 +55,47 @@
 <script>
 import 'codemirror/mode/yaml/yaml'
 import 'codemirror/theme/idea.css'
+import {CHANGE_YAML_VISIBILITY, VALIDATE_YAML} from "../../store/manager/actions";
+import _ from 'lodash'
+import { mapGetters, mapState } from 'vuex'
 
-    
 export default {
     name: "ActionMenu",
     data() {
         return {
-            yamlClicked: false,
-            code: 'const:\n  test: 123',
+            yaml: "",
             cmOptions: {
                 tabSize: 2,
                 mode: 'text/yaml',
                 theme: 'idea',
                 lineNumbers: true,
-                line: true
-            },
-            actions: [
-                { text: 'dd', type: "dd", color: "blue"},
-                { text: 'dd2', type: "ddsda", color: "red"},
-                { text: 'dd4', type: "ddq", color: "green"},
-            ]
+                line: true,
+            },            
         }
     },
     computed: {
-        yamlButtonColor() {
-            return this.yamlClicked ? 'green' : 'gray';
-        }
+        ...mapState('manager', [
+            'currentChart',
+            'currentActions',
+            'whyYouCant'
+        ]),
+        ...mapGetters('manager', [
+            'yamlButtonColor',
+            'yamlButtonText',
+            'hasErrors'
+        ])
     },
     methods: {
         showYaml() {
           $('.yamlForm').transition('slide down');
-          this.yamlClicked = !(this.yamlClicked);
-        }
-    }
+          this.$store.commit('manager/CHANGE_YAML_VISIBILITY');
+        },
+
+        onYamlChange: _.debounce(function (e) {
+            console.log("1");
+            this.$store.dispatch('manager/VALIDATE_YAML', this.yaml).catch(console.log);
+        }, 600)  
+    },
 }
 </script>
 

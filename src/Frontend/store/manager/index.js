@@ -1,4 +1,4 @@
-import {state, getters, actions, mutations} from './navStore'
+import {state, getters, actions, mutations } from './managerStore'
 
 export default {
     namespaced: true,

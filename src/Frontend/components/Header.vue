@@ -1,6 +1,8 @@
 <template lang="html">
   <div class="ui container">
-    <div class="ui right aligned header">{{ title }}</div>
+    <div class="ui segment inverted">
+      <div class="ui left aligned header">{{ title }}</div>  
+    </div>    
   </div>
 </template>
 

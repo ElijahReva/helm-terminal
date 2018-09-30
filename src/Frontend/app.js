@@ -1,4 +1,5 @@
 import Vue from 'vue'
+
 import App from './App.vue'
 import Logger from 'js-logger'
 import { sync } from 'vuex-router-sync'
@@ -11,8 +12,15 @@ import 'codemirror/lib/codemirror.css'
 import Router from './router'
 import Store from './store'
 
+
+
+
 Logger.useDefaults();
 Logger.setLevel(Logger.DEBUG);
+
+
+
+
 
 
 Vue.use(VueCodemirror);

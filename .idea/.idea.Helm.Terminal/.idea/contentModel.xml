@@ -66,10 +66,15 @@
               <e p="store.js" t="Include" />
             </e>
             <e p="index.js" t="Include" />
+            <e p="manager" t="Include">
+              <e p="actions.js" t="Include" />
+              <e p="index.js" t="Include" />
+              <e p="managerStore.js" t="Include" />
+            </e>
             <e p="navigation" t="Include">
               <e p="actions.js" t="Include" />
               <e p="index.js" t="Include" />
-              <e p="store.js" t="Include" />
+              <e p="navStore.js" t="Include" />
             </e>
           </e>
         </e>
@@ -93,6 +98,7 @@
           <e p="html-webpack-plugin" t="IncludeRecursive" />
           <e p="jquery" t="IncludeRecursive" />
           <e p="js-logger" t="IncludeRecursive" />
+          <e p="js-yaml" t="IncludeRecursive" />
           <e p="json-loader" t="IncludeRecursive" />
           <e p="less" t="IncludeRecursive" />
           <e p="less-loader" t="IncludeRecursive" />
@@ -121,7 +127,6 @@
         <e p="Properties" t="Include">
           <e p="launchSettings.json" t="Include" />
         </e>
-        <e p="semantic-theme" t="Include" />
         <e p="webpack.config.js" t="Include" />
         <e p="wwwroot" t="Include">
           <e p="dist" t="Include">
