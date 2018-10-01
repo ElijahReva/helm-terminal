@@ -3,7 +3,10 @@ import Vuex from 'vuex'
 import auth from './auth'
 import nav from './navigation'
 import manager from './manager'
-import signalr from './signalr'
+
+import {state, getters, actions, mutations} from './rootStore'
+
+
 import VuexPersistence  from 'vuex-persist'
 
 // const vuexPersist = new VuexPersist({
@@ -14,7 +17,8 @@ import VuexPersistence  from 'vuex-persist'
 const vuexLocal = new VuexPersistence({
     key: 'helm-terminal-local',
     modules: [
-        'manager'
+        'manager',
+        'nav'
     ],
     storage: window.localStorage,    
 });
@@ -23,11 +27,14 @@ const vuexLocal = new VuexPersistence({
 Vue.use(Vuex);
 
 export default new Vuex.Store({
+    state,
+    getters,
+    actions,
+    mutations,
     modules: {
         auth,
         nav,
         manager,
-        signalr,
     },
     plugins: [vuexLocal.plugin]
 })

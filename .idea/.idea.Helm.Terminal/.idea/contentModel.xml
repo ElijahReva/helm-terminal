@@ -58,6 +58,9 @@
             </e>
           </e>
           <e p="router.js" t="Include" />
+          <e p="services" t="Include">
+            <e p="api.js" t="Include" />
+          </e>
           <e p="store" t="Include">
             <e p="auth" t="Include">
               <e p="actions.js" t="Include" />
@@ -75,11 +78,8 @@
               <e p="index.js" t="Include" />
               <e p="navStore.js" t="Include" />
             </e>
-            <e p="signalr" t="Include">
-              <e p="constants.js" t="Include" />
-              <e p="index.js" t="Include" />
-              <e p="signalrStore.js" t="Include" />
-            </e>
+            <e p="rootConstants.js" t="Include" />
+            <e p="rootStore.js" t="Include" />
           </e>
         </e>
         <e p="Helm.Terminal.fsproj" t="IncludeRecursive" />

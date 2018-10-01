@@ -29,7 +29,11 @@ module App =
     
     let private getKubeContexts : HttpHandler =
         fun next ctx ->        
-             ctx.Request.c
+             DOM.getContexts() |> ctx.WriteJsonAsync
+              
+    let private runAction : HttpHandler =
+        fun next ctx ->        
+             DOM.getContexts() |> ctx.WriteJsonAsync
               
               
     let private currentSchema : HttpHandler =
@@ -46,7 +50,7 @@ module App =
                 choose [
                     api "/api" [                    
                         route "/current" >=> currentSchema                        
-                        route "/getContexts" >=> getKubeContexts                     
+                        route "/contexts" >=> getKubeContexts                     
                     ]
                 ]
             POST >=> 

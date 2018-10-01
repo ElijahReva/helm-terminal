@@ -21,23 +21,25 @@ module DOM =
     
     let cmdTimeout = TimeSpan.FromSeconds(30.)
     
-    let inline private setInfo toolPath repositoryDir command (info:ProcStartInfo) =
+    let inline private setInfo toolPath workDir command (info:ProcStartInfo) =
         { info with
             FileName = toolPath
-            WorkingDirectory = repositoryDir
+            WorkingDirectory = workDir
             Arguments = command }
-            
-            
-    let helm dir str = Process.execWithResult (setInfo "helm" dir str) cmdTimeout 
-    let kube dir str = Process.execWithResult (setInfo "kubectl" dir str) cmdTimeout 
     
-    let getContexts() =
-        let processResult = kube "." "config view -o json"
-        
+    let private runCmd tool dir args = 
+        let processResult = Process.execWithResult (setInfo tool dir args) cmdTimeout
+        if not processResult.OK then failwith <| String.toLines processResult.Errors else
         processResult.Messages 
-        |> String.toLines
+        |> String.toLines    
             
-   let getCharts ns =
+    let helm = runCmd "helm"
+    let kube = runCmd "kbuectl"
+        
+    let getContexts() = kube "config view -o json" "."
+        
+            
+    let getCharts ns =
         if ns |> Seq.isEmpty then
             ()
         else 

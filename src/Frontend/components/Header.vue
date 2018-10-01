@@ -30,14 +30,17 @@
   </div>
 </template>
 
-<script>  
+<script>
+import { createNamespacedHelpers } from 'vuex'
+
+const { mapState, mapActions } = createNamespacedHelpers('signalr');
+
 export default {
     name: 'Header',
     props: [ 'title' ],
     mounted() {
-        $('.ui.dropdown')
-            .dropdown()
-        ;
+        this.$store.dispatch(REQUEST_CONTEXTS);
+        $('.ui.dropdown').dropdown();
     }
 }
 </script>

@@ -1,10 +1,11 @@
-import { } from './constants'
-import {INIT_CONNECTION} from "./constants";
 import {HubConnectionBuilder, LogLevel} from '@aspnet/signalr'
+import {INIT_CONNECTION, REQUEST_CONTEXTS, UPDATE_CONTEXTS} from "./rootConstants";
+import api from '../services/api'
 
-
-export const state = {    
-    connection: null
+export const state = {
+    connection: null,
+    namespaces: [],
+    contexts: [],    
 };
 
 export const getters = {
@@ -32,7 +33,11 @@ export const actions = {
             .configureLogging(LogLevel.Debug)
             .build();
         connection.start().catch(err => console.error(err.toString()));
-        console.log("tetse2")
         commit(INIT_CONNECTION, connection);
-    }
+    },
+    
+    [REQUEST_CONTEXTS]: ({ commit }) => {
+        let newContexts = api.getContexts(); 
+        commit(UPDATE_CONTEXTS, newContexts);
+    },
 };
