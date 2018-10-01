@@ -1,7 +1,6 @@
     <template lang="html">
     <div>
         <Header title="Helm Terminal"/>
-        <MainMenu />
         <TabView />
     </div>    
 </template>
@@ -9,14 +8,17 @@
 <script>
 import Header from './components/Header.vue'
 import TabView from './components/TabView.vue'
-import MainMenu from './components/Menu.vue'
+import {INIT_CONNECTION} from './store/signalr/constants'
+
 
 export default {
     name: 'App',
     components:{
         Header,
         TabView,
-        MainMenu,
+    },
+    created() {
+        this.$store.dispatch("signalr/" + INIT_CONNECTION).catch(console.log);
     }
 }
 </script>

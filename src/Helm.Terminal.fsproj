@@ -6,6 +6,8 @@
     <PackageId>helm-terminal</PackageId>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Fake.Core.Process" Version="5.7.2" />
+    <PackageReference Include="FSharp.Data" Version="3.0.0-beta4" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.4" />
     <PackageReference Include="Giraffe" Version="3.1.0" />
     <PackageReference Include="SwaggerForFsharp.Giraffe" Version="1.0.0-CI00007" />

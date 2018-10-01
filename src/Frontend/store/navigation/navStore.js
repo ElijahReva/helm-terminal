@@ -1,5 +1,5 @@
-import { } from './actions'
-import {NAV_GOTO} from "./actions";
+import { } from './constants'
+import {NAV_GOTO} from "./constants";
 
 export const state = {
     tabs:[

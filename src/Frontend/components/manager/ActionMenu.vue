@@ -27,7 +27,7 @@
                             name="code"
                             rows="2"
                             v-model="yaml"
-                            v-on:input-read="onYamlChange()"
+                            v-on:update="onYamlChange()"
                             :options="cmOptions"
                     />
                 </div>
@@ -85,6 +85,9 @@ export default {
             'hasErrors'
         ])
     },
+    mounted() {
+        this.yaml = this.$store.state.manager.currentYaml;  
+    },
     methods: {
         showYaml() {
           $('.yamlForm').transition('slide down');
@@ -92,8 +95,9 @@ export default {
         },
 
         onYamlChange: _.debounce(function (e) {
-            console.log("1");
-            this.$store.dispatch('manager/VALIDATE_YAML', this.yaml).catch(console.log);
+            console.log("onYamlChange");
+            console.log(this.yaml);
+            if(this.yaml !== '' || isNaN(this.yaml)) this.$store.dispatch('manager/VALIDATE_YAML', this.yaml).catch(console.log);
         }, 600)  
     },
 }

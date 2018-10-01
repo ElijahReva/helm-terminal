@@ -3,7 +3,7 @@ import Vuex from 'vuex'
 import auth from './auth'
 import nav from './navigation'
 import manager from './manager'
-import { UPDATE_YAML } from './manager/actions'
+import signalr from './signalr'
 import VuexPersistence  from 'vuex-persist'
 
 // const vuexPersist = new VuexPersist({
@@ -13,9 +13,10 @@ import VuexPersistence  from 'vuex-persist'
 
 const vuexLocal = new VuexPersistence({
     key: 'helm-terminal-local',
-    storage: window.localStorage,
-    reducer: state => ({navigation: state.navigation}), //only save navigation module
-    filter: mutation => (mutation.type === UPDATE_YAML)
+    modules: [
+        'manager'
+    ],
+    storage: window.localStorage,    
 });
 
 
@@ -25,7 +26,8 @@ export default new Vuex.Store({
     modules: {
         auth,
         nav,
-        manager
+        manager,
+        signalr,
     },
     plugins: [vuexLocal.plugin]
 })

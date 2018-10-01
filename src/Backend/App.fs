@@ -1,12 +1,35 @@
 namespace Helm.Terminal.Server
 
+open Microsoft.AspNetCore.SignalR
+
+type ManagerHub() =
+        inherit Hub()       
+        
+        override this.OnConnectedAsync() = 
+            this.Groups.AddToGroupAsync(this.Context.ConnectionId, "SignalR Users")
+            |> Async.AwaitTask 
+            |> Async.RunSynchronously
+            Serilog.Log.Logger.Information("UserConnected {@Test}", this.Context.UserIdentifier)
+            base.OnConnectedAsync()
+        
+        override this.OnDisconnectedAsync(ex) = 
+           this.Groups.RemoveFromGroupAsync(this.Context.ConnectionId, "SignalR Users")
+           |> Async.AwaitTask 
+           |> Async.RunSynchronously
+           Serilog.Log.Logger.Information("UserDisconnected {@Test}", this.Context.UserIdentifier)
+           base.OnDisconnectedAsync(ex)
+
+
 module App =
+    open System.Threading.Tasks
+    open System.Threading.Tasks
     open System
     open Giraffe
+
     
-    let private getHeroesHandler : HttpHandler =
+    let private getKubeContexts : HttpHandler =
         fun next ctx ->        
-             "Data" |> ctx.WriteJsonAsync
+             ctx.Request.c
               
               
     let private currentSchema : HttpHandler =
@@ -23,7 +46,11 @@ module App =
                 choose [
                     api "/api" [                    
                         route "/current" >=> currentSchema                        
-                        route "/getContexts" >=> getHeroesHandler                     
+                        route "/getContexts" >=> getKubeContexts                     
                     ]
+                ]
+            POST >=> 
+                choose [
+                    route "/run" >=> runAction
                 ]
             ]

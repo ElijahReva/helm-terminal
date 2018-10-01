@@ -12,6 +12,7 @@ module Bootstrap =
     open Microsoft.AspNetCore
     open Microsoft.AspNetCore.Hosting
     open Microsoft.AspNetCore.Builder
+    open Microsoft.AspNetCore.SignalR
     open Microsoft.AspNetCore.HttpOverrides
     open Microsoft.AspNetCore.Cors.Infrastructure
     open Microsoft.AspNetCore.SpaServices.Webpack
@@ -30,8 +31,10 @@ module Bootstrap =
         member this.Configuration = configuration
 
         member this.ConfigureServices (services:IServiceCollection) =
-            services.AddGiraffe()
-            |> ignore
+            services
+                .AddGiraffe()
+                .AddSignalR()
+                |> ignore
         
         member this.Configure (app: IApplicationBuilder , env: IHostingEnvironment) : unit =
             if env.IsDevelopment()  then
@@ -47,7 +50,6 @@ module Bootstrap =
             let headers = new ForwardedHeadersOptions()
             headers.ForwardedHeaders <- (ForwardedHeaders.XForwardedFor + ForwardedHeaders.XForwardedProto)
             
-                       
             let api = 
                 this
                     .Configuration
@@ -57,6 +59,7 @@ module Bootstrap =
                     
             app.UseForwardedHeaders(headers)
                .UseGiraffeErrorHandler(errorHandler)
+               .UseSignalR(fun route -> route.MapHub<ManagerHub>(Http.PathString("/managerhub")))
                .UseStaticFiles()
                .UseMiddleware<GiraffeMiddleware>(api)
                .UseSpa(fun s -> s |> ignore);

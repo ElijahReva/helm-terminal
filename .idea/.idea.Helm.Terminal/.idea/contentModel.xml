@@ -52,7 +52,6 @@
               <e p="ChartList.vue" t="Include" />
               <e p="manager.vue" t="Include" />
             </e>
-            <e p="Menu.vue" t="Include" />
             <e p="TabView.vue" t="Include" />
             <e p="watcher" t="Include">
               <e p="Watcher.vue" t="Include" />
@@ -72,15 +71,21 @@
               <e p="managerStore.js" t="Include" />
             </e>
             <e p="navigation" t="Include">
-              <e p="actions.js" t="Include" />
+              <e p="constants.js" t="Include" />
               <e p="index.js" t="Include" />
               <e p="navStore.js" t="Include" />
+            </e>
+            <e p="signalr" t="Include">
+              <e p="constants.js" t="Include" />
+              <e p="index.js" t="Include" />
+              <e p="signalrStore.js" t="Include" />
             </e>
           </e>
         </e>
         <e p="Helm.Terminal.fsproj" t="IncludeRecursive" />
         <e p="jsconfig.json" t="Include" />
         <e p="node_modules" t="ExcludeRecursive">
+          <e p="@aspnet\signalr" t="IncludeRecursive" />
           <e p="@babel\core" t="IncludeRecursive" />
           <e p="@babel\preset-env" t="IncludeRecursive" />
           <e p="ajv" t="IncludeRecursive" />
@@ -102,6 +107,7 @@
           <e p="json-loader" t="IncludeRecursive" />
           <e p="less" t="IncludeRecursive" />
           <e p="less-loader" t="IncludeRecursive" />
+          <e p="lodash" t="IncludeRecursive" />
           <e p="node-sass" t="IncludeRecursive" />
           <e p="sass-loader" t="IncludeRecursive" />
           <e p="semantic-ui-css" t="IncludeRecursive" />
@@ -113,6 +119,7 @@
           <e p="vue-router" t="IncludeRecursive" />
           <e p="vue-template-compiler" t="IncludeRecursive" />
           <e p="vuex" t="IncludeRecursive" />
+          <e p="vuex-persist" t="IncludeRecursive" />
           <e p="vuex-router-sync" t="IncludeRecursive" />
           <e p="webpack" t="IncludeRecursive" />
           <e p="webpack-cli" t="IncludeRecursive" />
