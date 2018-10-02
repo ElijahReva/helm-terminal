@@ -5,7 +5,7 @@
         <div class="ui item left aligned header">{{ title }}</div>
         <div class="item">Kubernetes Context</div>
         <div class="ui item search selection dropdown" ref="dropdown">
-          <input type="hidden" name="country">
+          <input type="hidden" name="country" v-model="currentContext">
           <i class="dropdown icon"></i>
           <div class="default text">Select Context</div>
           <div class="menu">
@@ -36,6 +36,9 @@
 <script>
 import { createNamespacedHelpers } from 'vuex'
 
+import JQuery from 'jquery'
+let $ = JQuery;
+
 const { mapState, mapActions } = createNamespacedHelpers('signalr');
 
 export default {
@@ -43,19 +46,17 @@ export default {
     props: [ 'title' ],
     data(){
       return {
-          contexts: ['1','2','3']
+          contexts: ['1','2','3'],
+          currentContext: null,
       }  
     },
     mounted() {
-        //  this.$store.dispatch(REQUEST_CONTEXTS);
-        let a = $('.ui.dropdown');
-        console.log(this);
-        console.log(a);        
-        // this.$refs.dropdown.dropdown();
-        this.$nextTick(function () {
-            this.$refs.dropdown.dropdown(); 
-            this.$refs.dropdown1.dropdown(); 
-        });
+        $('.ui.dropdown').dropdown();                
+        
+        // this.$nextTick(function () {
+        //     this.$refs.dropdown.dropdown(); 
+        //     this.$refs.dropdown1.dropdown(); 
+        // });
     }
 }
 </script>

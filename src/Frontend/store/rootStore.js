@@ -29,7 +29,7 @@ export const mutations = {
 export const actions = {
     [INIT_CONNECTION]: ({ commit }) => {
         let connection = new HubConnectionBuilder()
-            .withUrl("http://localhost:5000/managerhub")
+            .withUrl("/managerhub")
             .configureLogging(LogLevel.Debug)
             .build();
         connection.start().catch(err => console.error(err.toString()));

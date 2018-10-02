@@ -18,10 +18,10 @@
 </template>
 
 <script>
-import JQuery from 'jquery'
-import { mapState, mapActions, mapGetters } from 'vuex'
 
+import JQuery from 'jquery'
 let $ = JQuery;
+import { mapState, mapActions, mapGetters } from 'vuex'
 
 export default {
     name: 'TabView',
