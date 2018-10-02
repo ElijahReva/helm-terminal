@@ -5,7 +5,7 @@
                 <div class="item">
                     <img class="ui avatar image" src="https://loremflickr.com/320/240">
                     <div class="content">
-                        {{ chart.name }}
+                        {{ chart }}
                     </div>
                 </div>
             </template>

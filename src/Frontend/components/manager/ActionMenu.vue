@@ -24,12 +24,11 @@
                 <div class="field">
                     <label>Values</label>
                     <codemirror
-                            name="code"
-                            rows="2"
-                            v-model="yaml"
-                            v-on:update="onYamlChange()"
-                            :options="cmOptions"
-                    />
+                        name="code"
+                        rows="2"
+                        v-model="yaml"
+                        v-on:update="onYamlChange()"
+                        :options="cmOptions" />
                 </div>
             </div>
             <div class="ui error message" v-if="hasErrors">
@@ -94,11 +93,11 @@ export default {
           this.$store.commit('manager/CHANGE_YAML_VISIBILITY');
         },
 
-        onYamlChange: _.debounce(function (e) {
+        onYamlChange: _.throttle(function (e) {
             console.log("onYamlChange");
             console.log(this.yaml);
             if(this.yaml !== '' || isNaN(this.yaml)) this.$store.dispatch('manager/VALIDATE_YAML', this.yaml).catch(console.log);
-        }, 600)  
+        }, 3000)  
     },
 }
 </script>

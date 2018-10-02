@@ -63,6 +63,7 @@ export const actions = {
     
     [VALIDATE_YAML] : ({ commit, state }, newYaml) => {
         try {
+            
             const doc = safeLoad(newYaml);                     
             commit(UPDATE_ERRORS, "");
         } catch (e) {

@@ -8,7 +8,7 @@
 <script>
 import Header from './components/Header.vue'
 import TabView from './components/TabView.vue'
-import {INIT_CONNECTION} from './store/signalr/constants'
+import {INIT_CONNECTION} from "./store/rootConstants";
 
 
 export default {
@@ -18,7 +18,7 @@ export default {
         TabView,
     },
     created() {
-        this.$store.dispatch("signalr/" + INIT_CONNECTION).catch(console.log);
+        this.$store.dispatch(INIT_CONNECTION).catch(console.log);
     }
 }
 </script>

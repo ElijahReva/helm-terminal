@@ -23,10 +23,12 @@ export const mutations = {
     state.token = resp.token;
     state.hasLoadedOnce = true
   },
+    
   [AUTH_ERROR]: state => {
     state.status = 'error';
     state.hasLoadedOnce = true
   },
+    
   [AUTH_LOGOUT]: state => {
     state.token = ''
   }
@@ -36,23 +38,19 @@ export const mutations = {
 export const actions = {
   [AUTH_REQUEST]: ({ commit }) => {
     commit(AUTH_REQUEST);
-    // apiCall({ url: 'auth', data: user, method: 'POST' })
-    //   .then(resp => {
-    let token = 'TestToken';
-
-    localStorage.setItem('user-token', token);
-    // Here set the header of your ajax library to the token value.
-    // example with axios
-    // axios.defaults.headers.common['Authorization'] = resp.token
-    commit(AUTH_SUCCESS, token)
-    //     dispatch(USER_REQUEST)
-    //     resolve(resp)
-    //   })
-    //   .catch(err => {
-    //     commit(AUTH_ERROR, err)
-    //     localStorage.removeItem('user-token')
-    //     reject(err)
-    //   })
+    apiCall({ url: 'auth', data: user, method: 'POST' })
+       .then(resp => {
+                let token = 'TestToken';           
+                localStorage.setItem('user-token', token);
+                axios.defaults.headers.common['Authorization'] = resp.token
+                commit(AUTH_SUCCESS, token)
+                dispatch(USER_REQUEST)
+                resolve(resp)
+      }).catch(err => {
+        commit(AUTH_ERROR, err)
+        localStorage.removeItem('user-token')
+        reject(err)
+      });
   },
   [AUTH_LOGOUT]: ({ commit }) => {
     commit(AUTH_LOGOUT);

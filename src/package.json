@@ -35,6 +35,7 @@
     "url-loader": "^1.0.1",
     "vue-codemirror": "^4.0.5",
     "vue-loader": "^15.2.4",
+    "vue-store": "^0.3.1-moved",
     "vue-template-compiler": "^2.5.16",
     "vuex-persist": "^1.6.1",
     "vuex-router-sync": "^5.0.0",

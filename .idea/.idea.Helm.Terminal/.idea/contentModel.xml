@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelStore">
-    <e p="C:\Users\b0rsh\.nuget\packages\xunit.runner.visualstudio\2.4.0\build\netcoreapp1.0\xunit.runner.reporters.netcoreapp10.dll" t="Include" />
-    <e p="C:\Users\b0rsh\.nuget\packages\xunit.runner.visualstudio\2.4.0\build\netcoreapp1.0\xunit.runner.utility.netcoreapp10.dll" t="Include" />
-    <e p="C:\Users\b0rsh\.nuget\packages\xunit.runner.visualstudio\2.4.0\build\netcoreapp1.0\xunit.runner.visualstudio.dotnetcore.testadapter.dll" t="Include" />
-    <e p="C:\Users\b0rsh\.Rider2018.2\config\consoles\graphdb-parameters" t="IncludeRecursive" />
-    <e p="C:\Users\b0rsh\.Rider2018.2\config\extensions" t="IncludeRecursive" />
-    <e p="C:\Users\b0rsh\.Rider2018.2\config\scratches" t="IncludeRecursive" />
-    <e p="C:\Users\b0rsh\.Rider2018.2\system\extResources" t="IncludeRecursive" />
-    <e p="C:\Users\b0rsh\.Rider2018.2\system\resharper-host\local\Transient\ReSharperHost\v182\SolutionCaches\_Helm.Terminal.2086373579.00" t="ExcludeRecursive" />
-    <e p="E:\work\helm-terminal" t="IncludeFlat">
-      <e p=".git\info\exclude" t="IncludeRecursive" />
+    <e p="C:\Users\illia.reva\.nuget\packages\xunit.runner.visualstudio\2.4.0\build\netcoreapp1.0\xunit.runner.reporters.netcoreapp10.dll" t="Include" />
+    <e p="C:\Users\illia.reva\.nuget\packages\xunit.runner.visualstudio\2.4.0\build\netcoreapp1.0\xunit.runner.utility.netcoreapp10.dll" t="Include" />
+    <e p="C:\Users\illia.reva\.nuget\packages\xunit.runner.visualstudio\2.4.0\build\netcoreapp1.0\xunit.runner.visualstudio.dotnetcore.testadapter.dll" t="Include" />
+    <e p="C:\Users\illia.reva\.Rider2018.2\config\scratches" t="IncludeRecursive" />
+    <e p="C:\Users\illia.reva\.Rider2018.2\system\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\illia.reva\.Rider2018.2\system\resharper-host\local\Transient\ReSharperHost\v182\SolutionCaches\_Helm.Terminal.915119475.00" t="ExcludeRecursive" />
+    <e p="D:\Projects\helm-terminal" t="IncludeFlat">
       <e p=".gitignore" t="Include" />
       <e p=".gitlab-ci.yml" t="Include" />
       <e p="build" t="IncludeRecursive">
@@ -84,49 +81,7 @@
         </e>
         <e p="Helm.Terminal.fsproj" t="IncludeRecursive" />
         <e p="jsconfig.json" t="Include" />
-        <e p="node_modules" t="ExcludeRecursive">
-          <e p="@aspnet\signalr" t="IncludeRecursive" />
-          <e p="@babel\core" t="IncludeRecursive" />
-          <e p="@babel\preset-env" t="IncludeRecursive" />
-          <e p="ajv" t="IncludeRecursive" />
-          <e p="aspnet-webpack" t="IncludeRecursive" />
-          <e p="babel-loader" t="IncludeRecursive" />
-          <e p="babel-preset-env" t="IncludeRecursive" />
-          <e p="codemirror" t="IncludeRecursive" />
-          <e p="copy-webpack-plugin" t="IncludeRecursive" />
-          <e p="css-loader" t="IncludeRecursive" />
-          <e p="eslint" t="IncludeRecursive" />
-          <e p="eslint-config-prettier" t="IncludeRecursive" />
-          <e p="eslint-loader" t="IncludeRecursive" />
-          <e p="eslint-plugin-vue" t="IncludeRecursive" />
-          <e p="file-loader" t="IncludeRecursive" />
-          <e p="html-webpack-plugin" t="IncludeRecursive" />
-          <e p="jquery" t="IncludeRecursive" />
-          <e p="js-logger" t="IncludeRecursive" />
-          <e p="js-yaml" t="IncludeRecursive" />
-          <e p="json-loader" t="IncludeRecursive" />
-          <e p="less" t="IncludeRecursive" />
-          <e p="less-loader" t="IncludeRecursive" />
-          <e p="lodash" t="IncludeRecursive" />
-          <e p="node-sass" t="IncludeRecursive" />
-          <e p="sass-loader" t="IncludeRecursive" />
-          <e p="semantic-ui-css" t="IncludeRecursive" />
-          <e p="style-loader" t="IncludeRecursive" />
-          <e p="url-loader" t="IncludeRecursive" />
-          <e p="vue" t="IncludeRecursive" />
-          <e p="vue-codemirror" t="IncludeRecursive" />
-          <e p="vue-loader" t="IncludeRecursive" />
-          <e p="vue-router" t="IncludeRecursive" />
-          <e p="vue-template-compiler" t="IncludeRecursive" />
-          <e p="vuex" t="IncludeRecursive" />
-          <e p="vuex-persist" t="IncludeRecursive" />
-          <e p="vuex-router-sync" t="IncludeRecursive" />
-          <e p="webpack" t="IncludeRecursive" />
-          <e p="webpack-cli" t="IncludeRecursive" />
-          <e p="webpack-dev-middleware" t="IncludeRecursive" />
-          <e p="webpack-hot-middleware" t="IncludeRecursive" />
-          <e p="webpack-merge" t="IncludeRecursive" />
-        </e>
+        <e p="node_modules" t="ExcludeRecursive" />
         <e p="obj" t="ExcludeRecursive" />
         <e p="package-lock.json" t="Include" />
         <e p="package.json" t="Include" />
@@ -136,25 +91,6 @@
         </e>
         <e p="webpack.config.js" t="Include" />
         <e p="wwwroot" t="Include">
-          <e p="dist" t="Include">
-            <e p="0ab54153eeeca0ce03978cc463b257f7.woff2" t="Include" />
-            <e p="a046592bac8f2fd96e994733faf3858c.woff" t="Include" />
-            <e p="brand-icons.eot" t="Include" />
-            <e p="brand-icons.svg" t="Include" />
-            <e p="brand-icons.ttf" t="Include" />
-            <e p="cd6c777f1945164224dee082abaea03a.woff2" t="Include" />
-            <e p="e8c322de9658cbeb8a774b6624167c2c.woff2" t="Include" />
-            <e p="ef60a4f6c25ef7f39f2d25a748dbecfe.woff" t="Include" />
-            <e p="faff92145777a3cbaf8e7367b4807987.woff" t="Include" />
-            <e p="flags.png" t="Include" />
-            <e p="icons.eot" t="Include" />
-            <e p="icons.svg" t="Include" />
-            <e p="icons.ttf" t="Include" />
-            <e p="main.js" t="Include" />
-            <e p="outline-icons.eot" t="Include" />
-            <e p="outline-icons.svg" t="Include" />
-            <e p="outline-icons.ttf" t="Include" />
-          </e>
           <e p="favicon.ico" t="Include" />
           <e p="index.html" t="Include" />
         </e>

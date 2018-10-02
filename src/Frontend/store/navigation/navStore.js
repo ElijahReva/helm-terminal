@@ -2,7 +2,7 @@ import { } from './constants'
 import {NAV_GOTO} from "./constants";
 
 export const state = {
-    tabs:[
+    tabs: [
         "manager",
         "watcher",
         "logs",
