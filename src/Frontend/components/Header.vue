@@ -23,7 +23,7 @@
           <div class="default text">Select Namespace</div>
           <div class="menu">
             <div class="item" data-value="af"><i class="af flag"></i>Afghanistan</div>
-            <div class="item" data-value="zm"><i class="zm flag"></i>Zambia</div>
+            <div class="item" data-value="zm"><i class="zm flag"></i>Zambia</div>   
             <div class="item" data-value="zw"><i class="zw flag"></i>Zimbabwe</div>
           </div>
         </div>

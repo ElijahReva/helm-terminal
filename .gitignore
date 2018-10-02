@@ -358,3 +358,7 @@ src/dist/
 src/wwwroot/dist/
 
 output/
+
+\.idea/\.idea\.Helm\.Terminal/\.idea/contentModel\.xml
+
+src/wwwroot/
