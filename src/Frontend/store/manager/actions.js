@@ -3,8 +3,9 @@ export const UPDATE_ERRORS = 'UPDATE_ERRORS';
 export const UPDATE_YAML = 'UPDATE_YAML';
 
 
-export const CHART_SELECTED = 'CHART_SELECTED';
-export const UPDATE_CHART = 'UPDATE_CHART';
+export const SELECT_CHART = 'SELECT_CHART';
+export const SET_CHARTS = 'SET_CHARTS';
+export const UPDATE_CHARTS = 'UPDATE_CHARTS';
 
 export const CHANGE_YAML_VISIBILITY = 'CHANGE_YAML_VISIBILITY';
 

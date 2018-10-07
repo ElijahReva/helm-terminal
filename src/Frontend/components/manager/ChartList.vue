@@ -1,28 +1,62 @@
 <template>
-    <div class="sixteen wide column">
-        <div class="ui middle aligned divided list">
-            <template v-for="chart in charts">
-                <div class="item">
-                    <img class="ui avatar image" src="https://loremflickr.com/320/240">
-                    <div class="content">
-                        {{ chart }}
-                    </div>
-                </div>
-            </template>
-        </div>
-    </div>
+    <table class="ui selectable table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Chart</th>
+                <th>Revision</th>
+                <th>Status</th>
+                <th>updated</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr 
+                v-for="chart in getCharts" 
+                :key="chart.name"
+                @click="SELECT_CHART(chart.name)"
+                v-bind:class="{ selected: chart.isSelected}" >
+                <td>{{ chart.name }}</td>
+                <td>{{ chart.chart }}</td>
+                <td>{{ chart.revision }}</td>
+                <td>{{ chart.status }}</td>
+                <td>{{ chart.updated }}</td>
+            </tr>
+        </tbody>        
+    </table>
 </template>
 
 <script>    
-    import { mapGetters, mapState } from 'vuex'
-    export default {
-        name: "ChartList",
-        computed: {
-            ...mapState('manager', [ 'charts' ])
-        }
+import {
+    SELECT_CHART
+} from "../../store/manager/actions";
+
+import { createNamespacedHelpers } from 'vuex'
+const { mapGetters, mapActions} = createNamespacedHelpers('manager');
+
+export default {
+    name: "ChartList",
+    
+    methods: {
+        ...mapActions([
+            SELECT_CHART,
+        ]),
+    },
+    
+    computed: {
+        ...mapGetters([ 
+            'getCharts',
+        ]),
+        
+        selectedChart: {
+            get() { return this.$store.state.manager.selectedChart; },
+            set(value) { this.SELECT_CHART(value); },
+        },
     }
+}
 </script>
 
 <style scoped>
-
+tr.selected {
+    background: rgba(0,0,0,.15) !important;
+}
 </style>

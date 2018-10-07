@@ -27,8 +27,24 @@ module DOM =
             name: string
             address: string        
             defaultNamespace: string        
-        }
+        }        
         
+    [<CLIMutable>]
+    type KubeNamespace = 
+        {
+            name: string        
+        }
+     
+    [<CLIMutable>]
+    type Chart = 
+        {
+            Name: string
+            Chart: string
+            Revision: int
+            AppVersion: string                        
+            Status: string                        
+            Updated: string                        
+        }   
     
     let cmdTimeout = TimeSpan.FromSeconds(30.)
     
@@ -75,15 +91,41 @@ module DOM =
         |> JsonValue.TryParse
         |> Option.map getCtx
             
-    let getNamespaces() = kube "." "get ns -o json"
+    let getNamespaces context =
+        let toNamespaces json : KubeNamespace list =
+            [ for c in json?items -> c]
+            |> List.filter (fun ns -> ns?status?phase.AsString() = "Active" )
+            |> List.map (fun ns -> { name = ns?metadata?name.AsString() })
+            
+        context    
+        |> sprintf "get ns -o json --context %s"         
+        |> kube "." 
+        |> JsonValue.Parse
+        |> toNamespaces
         
             
-    let getCharts ns =
-        if ns |> Seq.isEmpty then
-            ()
+    let getCharts context ns =
+        let toCharts json =
+            [for r in json?Releases -> r]
+            |> List.map 
+                (fun (x: JsonValue) -> 
+                    {
+                        Name = x?Name.AsString()
+                        Chart = x?Chart.AsString()
+                        Revision = x?Revision.AsInteger()
+                        AppVersion = x?AppVersion.AsString()                     
+                        Status = x?Status.AsString()             
+                        Updated = x?Updated.AsString()
+                    })
+    
+        let output = 
+            sprintf "ls --output json --namespace %s --kube-context %s " ns context |> helm "."
+        
+        
+        if String.isNullOrEmpty output then 
+            List.empty
         else 
-            //[ for p in ns?results -> p?name.AsString() ]
-            ()
+            output |> JsonValue.Parse |> toCharts
   
     [<CLIMutable>]
     type KubeSettings = 
@@ -108,10 +150,3 @@ module DOM =
                  let res = f x    
                  cache := (!cache).Add(x,res)    
                  res
-                 
-        
-    [<CLIMutable>]
-    type KubeNamespace = 
-        {
-            name: string        
-        }

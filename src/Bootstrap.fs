@@ -22,10 +22,20 @@ module Bootstrap =
     open Microsoft.Extensions.DependencyInjection
     open Serilog
     open Serilog.Events  
+    open System.Diagnostics
+    
+    type ServerError =    
+        {
+            Message: string
+            Stack: string
+        }
     
     let errorHandler (ex : Exception) (logger : Logging.ILogger) =
         Log.Error(ex, "An unhandled exception has occurred while executing the request. {EventId}", Logging.EventId())
-        clearResponse >=> setStatusCode 500 >=> text ex.Message
+        clearResponse >=> setStatusCode 500 >=> (fun a ctx -> 
+                let ex = ex.Demystify()
+                { Message = ex.Message; Stack = ex.StackTrace} |> ctx.WriteJsonAsync
+            )
         
     type Startup(configuration: IConfiguration) =
         member this.Configuration = configuration
@@ -76,7 +86,7 @@ module Bootstrap =
     let logger() =
             Log.Logger <- 
                 (new LoggerConfiguration())
-                    .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+                    .MinimumLevel.Override("Microsoft", LogEventLevel.Debug)
                     .MinimumLevel.Debug()                                    
                     .Enrich.WithDemystifiedStackTraces()
                     .Enrich.FromLogContext()

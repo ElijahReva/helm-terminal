@@ -20,11 +20,11 @@
         <select v-model="currentNamespace" id="namespace-dropbox" class="ui item search selection dropdown">
           <option
                   v-for="ns in namespaces"
-                  :value="ns"
-                  :key="ns"
+                  :value="ns.name"
+                  :key="ns.name"
                   class="item">
             
-            {{ ns }}
+            {{ ns.name }}
 
           </option >
         </select>        
@@ -34,11 +34,13 @@
   </div>
 </template>
 <script>
-    import { mapState, mapActions } from 'vuex'
+    import { mapState, mapActions, mapMutations } from 'vuex'
     import { 
         REQUEST_CONTEXTS,
         SET_CONTEXT,
         SET_NAMESPACE,
+        UPDATE_NAMESPACES,
+        REQUEST_NAMESPACES,
     } from "../store/rootConstants";
     import JQuery from 'jquery'
     
@@ -48,14 +50,15 @@
         name: 'Header',
         props: [ 'title' ],
         computed: {
+            
             currentNamespace: {
                 get() { return this.$store.state.currentNamespace; },
-                set(value) { this.$store.commit(SET_NAMESPACE, value); },
+                set(value) { this.SET_NAMESPACE(value); },
             },
 
             currentContext: {
                 get() { return this.$store.state.currentContext; },
-                set(value) { this.$store.commit(SET_CONTEXT, value); },
+                set(value) { this.SET_CONTEXT(value); },
             },
             
             ...mapState([
@@ -63,25 +66,34 @@
                 'contexts',
                 'namespaces',
             ]),
-            // ...mapGetters('manager', [
-            //     'yamlButtonColor',
-            //     'yamlButtonText',
-            //     'hasErrors'
-            // ])
-        },
-    
-        created() {
-            this.$store.dispatch(REQUEST_CONTEXTS)
+            
         },
 
         mounted() {
             $('.ui.dropdown').dropdown();
         },
+        
+        methods: {
+            ...mapActions([
+                REQUEST_NAMESPACES,
+            ]),
+            ...mapMutations([
+                SET_CONTEXT,
+                SET_NAMESPACE
+            ]),
+        },
 
         watch: {
             currentContext: function(event) {
-                $('#namespace-dropbox').dropdown('set text', "<i class=\"af flag\"></i> 11");
-                $('#namespace-dropbox').dropdown('set value', '11');
+                
+                this.REQUEST_NAMESPACES()
+                    .then(result => {
+                        
+                        console.log(result);
+                        // $('#namespace-dropbox').dropdown('set text', "<i class=\"af flag\"></i> 11");
+                        // $('#namespace-dropbox').dropdown('set value', '11');
+                    })
+                    .catch(err => console.log(err));
             }
         }
     }

@@ -36,19 +36,21 @@
 import { AUTH_REQUEST } from './../store/auth/actions'
 
 export default {
-  name: 'login',
-  data () {
-    return {
-      email: 'dogo',
-      password: 'dogy',
-    }
-  },
-  methods: {
-    login: function () {
-      const { email, password } = this;
-      this.$store.dispatch(AUTH_REQUEST, { email, password }).then(() => {
-        this.$router.push('/')
-      })
+    name: 'login',
+    
+    data () {
+        return {
+            email: 'dogo',
+            password: 'dogy',
+        }
+    },
+    
+    methods: {
+        login: function () {
+            const { email, password } = this;
+            this.$store.dispatch(AUTH_REQUEST, { email, password }).then(() => {
+            this.$router.push('/')
+        })
     }
   },
 }

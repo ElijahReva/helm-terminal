@@ -9,10 +9,15 @@ import {state, getters, actions, mutations} from './rootStore'
 
 import VuexPersistence  from 'vuex-persist'
 
-// const vuexPersist = new VuexPersist({
-//     key: 'helm-terminal',
-//     storage: localStorage
-// });
+import {SET_CONTEXT, SET_NAMESPACE} from "./rootConstants";
+
+const vuexLocalRoot = new VuexPersistence({
+    key: 'helm-terminal-local-root',
+    storage: window.localStorage,
+    filter: mutation => {
+        return mutation.type === SET_NAMESPACE || mutation.type === SET_CONTEXT
+    } 
+});
 
 const vuexLocal = new VuexPersistence({
     key: 'helm-terminal-local',
@@ -36,5 +41,5 @@ export default new Vuex.Store({
         nav,
         manager,
     },
-    plugins: [vuexLocal.plugin]
+    plugins: [vuexLocal.plugin, vuexLocalRoot.plugin]
 })

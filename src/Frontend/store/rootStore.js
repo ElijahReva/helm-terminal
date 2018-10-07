@@ -6,7 +6,7 @@ import {
     REQUEST_CONTEXTS,
     UPDATE_CONTEXTS,
     REQUEST_IN_PROGRESS,
-    SET_CONTEXT, SET_NAMESPACE
+    SET_CONTEXT, SET_NAMESPACE, UPDATE_NAMESPACES, REQUEST_NAMESPACES
 } from "./rootConstants";
 import api from '../services/api'
 import axios from "axios";
@@ -48,6 +48,10 @@ export const mutations = {
     
     [UPDATE_CONTEXTS] : (state, newContexts) => {
         state.contexts = newContexts;
+    },    
+    
+    [UPDATE_NAMESPACES] : (state, newNamespaces) => {
+        state.namespaces = newNamespaces;
     },
     
     [REQUEST_IN_PROGRESS] : (state, isRequestInProgress) => {
@@ -64,7 +68,7 @@ export const mutations = {
 };
 
 export const actions = {
-    [INIT_CONNECTION]: ({ commit }) => {
+    [INIT_CONNECTION]: ({ commit, state, dispatch }) => {
         
         let api = axios.create({
             baseURL: `/api/`,
@@ -105,11 +109,19 @@ export const actions = {
             .start()
             .catch(err => console.error(err.toString()));
         
-        commit(INIT_SIGNALR, signalR);
+        commit(INIT_SIGNALR, signalR);        
     },
     
+    [SET_CONTEXT] : ({ commit }, newContext) => {
+        commit(SET_CONTEXT, newContext)    
+    },
+
+    [SET_NAMESPACE] : ({ commit }, newNs) => {
+        commit(SET_NAMESPACE, newNs)    
+    },
+
     [REQUEST_CONTEXTS]: ({ state, commit }) => {
-        commit(REQUEST_IN_PROGRESS, true);
+        // commit(REQUEST_IN_PROGRESS, true);
         api.getContexts(state.api)
             .then(resp => {
                 commit(UPDATE_CONTEXTS, resp.data);
@@ -118,15 +130,17 @@ export const actions = {
                 commit(SET_CONTEXT, resp.data[0].name);
             })
             .catch(err => console.log(err));
-        commit(REQUEST_IN_PROGRESS, false);       
+        // commit(REQUEST_IN_PROGRESS, false);       
     },
     
-    [SET_CONTEXT] : ({ commit }, newContext) => {
-        commit(SET_CONTEXT, newContext)    
-    },
-    
-    [SET_NAMESPACE] : ({ commit }, newNs) => {
-        commit(SET_NAMESPACE, newNs)    
+    [REQUEST_NAMESPACES] : ({ state, commit, dispatch}) => {
+        
+        api.getNamespaces(state.api, state.currentContext)
+            .then(resp => {
+                commit(UPDATE_NAMESPACES, resp.data);
+                dispatch(SET_NAMESPACE, resp.data[0].name);
+            })
+            .catch(err => console.log(err));
     },
     
 };

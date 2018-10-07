@@ -48,8 +48,17 @@ module App =
              
     let private getKubeNamespaces : HttpHandler =
         fun next ctx ->
-            kube "." "get ns -o json" |> JsonConvert.DeserializeObject |> ctx.WriteJsonAsync
+            ctx.TryGetQueryStringValue "context"
+            |> Option.map getNamespaces 
+            |> fromOption ctx
             
+              
+    let private getHelmCharts : HttpHandler =
+        fun next ctx ->        
+             ctx.TryGetQueryStringValue "context"
+             |> Option.bind (fun x -> ctx.TryGetQueryStringValue "namespace"|> Option.map (fun y -> x, y))
+             |> Option.map (fun (c, n) -> getCharts c n)  
+             |> fromOption ctx            
               
     let private runAction : HttpHandler =
         fun next ctx ->        
@@ -68,10 +77,11 @@ module App =
         choose [
             GET >=>
                 choose [
-                    api "/api" [                    
+                    api "/api" [                                          
+                        route "/charts" >=> getHelmCharts                           
                         route "/current" >=> currentSchema                        
                         route "/contexts" >=> getKubeContexts                     
-                        route "/namespaces" >=> getKubeNamespaces                     
+                        route "/namespaces" >=> getKubeNamespaces             
                     ]
                 ]
             POST >=> 

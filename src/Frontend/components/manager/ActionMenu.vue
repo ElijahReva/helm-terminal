@@ -1,5 +1,5 @@
 <template>
-    <div class="sixteen wide column">
+    <div>
         <div class="ui secondary  menu">
             <div class="item ">
                 <i class="check green icon"></i>    
@@ -89,7 +89,8 @@ export default {
         ])
     },
     mounted() {
-        this.yaml = this.$store.state.manager.currentYaml;  
+        if(!this.$store.state.manager.isYamlVisible) $('.yamlForm').transition('slide down');
+        this.yaml = this.$store.state.manager.currentYaml;        
     },
     methods: {
         ...mapActions([
