@@ -1,11 +1,27 @@
 import {HubConnectionBuilder, LogLevel} from '@aspnet/signalr'
-import {INIT_CONNECTION, REQUEST_CONTEXTS, UPDATE_CONTEXTS} from "./rootConstants";
+import {
+    INIT_API,
+    INIT_SIGNALR,
+    INIT_CONNECTION,
+    REQUEST_CONTEXTS,
+    UPDATE_CONTEXTS,
+    REQUEST_IN_PROGRESS,
+    SET_CONTEXT, SET_NAMESPACE
+} from "./rootConstants";
 import api from '../services/api'
+import axios from "axios";
 
 export const state = {
-    connection: null,
+    isRequestInProgress: false,
+    
+    signalR: null,
+    api: null,
+    
+    currentContext: null,
+    contexts: [],
+    
     namespaces: [],
-    contexts: [],    
+    currentNamespace: null,
 };
 
 export const getters = {
@@ -21,23 +37,96 @@ export const getters = {
 };
 
 export const mutations = {
-    [INIT_CONNECTION] : (state, connection) => {
-        state.connection = connection;
+    
+    [INIT_API] : (state, api) => {
+        state.api = api;
+    },  
+    
+    [INIT_SIGNALR] : (state, signalR) => {
+        state.signalR = signalR;
+    },
+    
+    [UPDATE_CONTEXTS] : (state, newContexts) => {
+        state.contexts = newContexts;
+    },
+    
+    [REQUEST_IN_PROGRESS] : (state, isRequestInProgress) => {
+        state.isRequestInProgress = isRequestInProgress;
+    },
+    
+    [SET_CONTEXT] : (state, newContext) => {
+        state.currentContext = newContext;
+    },
+    
+    [SET_NAMESPACE] : (state, newNs) => {
+        state.currentNamespace = newNs;
     },
 };
 
 export const actions = {
     [INIT_CONNECTION]: ({ commit }) => {
-        let connection = new HubConnectionBuilder()
+        
+        let api = axios.create({
+            baseURL: `/api/`,
+            withCredentials: false,
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+
+        });
+        
+        api.interceptors.request.use(function (config) {
+            commit(REQUEST_IN_PROGRESS, true);
+            return config;
+        }, function (error) {
+            commit(REQUEST_IN_PROGRESS, false);
+            return Promise.reject(error);
+        });
+        
+        api.interceptors.response.use(function (response) {
+            commit(REQUEST_IN_PROGRESS, false);
+            return response;
+        }, function (error) {
+            commit(REQUEST_IN_PROGRESS, false);
+            return Promise.reject(error);
+        });
+
+        commit(INIT_API, api);
+        
+        
+        
+        let signalR = new HubConnectionBuilder()
             .withUrl("/managerhub")
             .configureLogging(LogLevel.Debug)
             .build();
-        connection.start().catch(err => console.error(err.toString()));
-        commit(INIT_CONNECTION, connection);
+        
+        signalR
+            .start()
+            .catch(err => console.error(err.toString()));
+        
+        commit(INIT_SIGNALR, signalR);
     },
     
-    [REQUEST_CONTEXTS]: ({ commit }) => {
-        let newContexts = api.getContexts(); 
-        commit(UPDATE_CONTEXTS, newContexts);
+    [REQUEST_CONTEXTS]: ({ state, commit }) => {
+        commit(REQUEST_IN_PROGRESS, true);
+        api.getContexts(state.api)
+            .then(resp => {
+                commit(UPDATE_CONTEXTS, resp.data);
+                // if resp data has no old context select first
+                // if currentCtx = null select first
+                commit(SET_CONTEXT, resp.data[0].name);
+            })
+            .catch(err => console.log(err));
+        commit(REQUEST_IN_PROGRESS, false);       
     },
+    
+    [SET_CONTEXT] : ({ commit }, newContext) => {
+        commit(SET_CONTEXT, newContext)    
+    },
+    
+    [SET_NAMESPACE] : ({ commit }, newNs) => {
+        commit(SET_NAMESPACE, newNs)    
+    },
+    
 };

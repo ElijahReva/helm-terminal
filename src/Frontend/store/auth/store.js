@@ -9,7 +9,8 @@ export const state = {
 
 // getters
 export const getters = {
-  isAuthenticated: state => !!state.token,
+  // isAuthenticated: state => !!state.token,
+  isAuthenticated: state => true,
   authStatus: state => state.status
 };
 

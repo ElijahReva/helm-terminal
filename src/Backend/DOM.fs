@@ -4,10 +4,12 @@ namespace Helm.Terminal.Server
 module DOM =
 
     open System
+    open System.Diagnostics
     open FSharp.Data    
     open Fake.Core
     open FSharp.Data.JsonExtensions
-  
+    open Serilog
+      
     type HelmChart = JsonProvider<"""
     {
         "Name": "dev-ui",
@@ -19,24 +21,61 @@ module DOM =
         "Namespace": "dev-ui"
     }""">
     
+    [<CLIMutable>]
+    type KubeContext = 
+        {
+            name: string
+            address: string        
+            defaultNamespace: string        
+        }
+        
+    
     let cmdTimeout = TimeSpan.FromSeconds(30.)
     
-    let inline private setInfo toolPath workDir command (info:ProcStartInfo) =
+    let inline private setInfo tool dir args (info:ProcStartInfo) =
         { info with
-            FileName = toolPath
-            WorkingDirectory = workDir
-            Arguments = command }
+            FileName = tool
+            WorkingDirectory = dir
+            Arguments = args }
     
-    let private runCmd tool dir args = 
+    let getTime() = Stopwatch.GetTimestamp()    
+    let getElapser (start: int64) (stop: int64) = int64((stop - start) * int64(1000)) / Stopwatch.Frequency;
+    
+    let private runCmd tool dir args =
+        
+        Log.Information("RunningCmd {Tool} {Args}", tool, args) 
+        let start = getTime()
         let processResult = Process.execWithResult (setInfo tool dir args) cmdTimeout
+        let elapsedMs = getElapser start (getTime())
         if not processResult.OK then failwith <| String.toLines processResult.Errors else
+        
+        Log.Information("RunningCmdFinished {Tool} {Args} {Elapsed}", tool, args, elapsedMs)
         processResult.Messages 
         |> String.toLines    
             
     let helm = runCmd "helm"
-    let kube = runCmd "kbuectl"
+    let kube = runCmd "kubectl"
         
-    let getContexts() = kube "config view -o json" "."
+    let getContexts() : KubeContext list option =
+        let getCtx json : KubeContext list =
+            let contexts = 
+                [
+                    for c in json?contexts ->
+                    { 
+                        name = c?name.AsString()
+                        address = c?context?cluster.AsString() 
+                        defaultNamespace = c?context?``namespace``.AsString() 
+                    } 
+                ]
+            contexts
+                 
+    
+        "config view -o json" 
+        |> kube "."  
+        |> JsonValue.TryParse
+        |> Option.map getCtx
+            
+    let getNamespaces() = kube "." "get ns -o json"
         
             
     let getCharts ns =
@@ -70,12 +109,6 @@ module DOM =
                  cache := (!cache).Add(x,res)    
                  res
                  
-    [<CLIMutable>]
-    type KubeContext = 
-        {
-            name: string
-            address: string        
-        }
         
     [<CLIMutable>]
     type KubeNamespace = 

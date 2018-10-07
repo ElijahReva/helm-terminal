@@ -55,8 +55,12 @@
 import 'codemirror/mode/yaml/yaml'
 import 'codemirror/theme/idea.css'
 import {CHANGE_YAML_VISIBILITY, VALIDATE_YAML} from "../../store/manager/actions";
+
 import _ from 'lodash'
-import { mapGetters, mapState } from 'vuex'
+
+import { createNamespacedHelpers } from 'vuex'
+
+const { mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('manager');
 
 export default {
     name: "ActionMenu",
@@ -73,12 +77,12 @@ export default {
         }
     },
     computed: {
-        ...mapState('manager', [
+        ...mapState([
             'currentChart',
             'currentActions',
             'whyYouCant'
         ]),
-        ...mapGetters('manager', [
+        ...mapGetters([
             'yamlButtonColor',
             'yamlButtonText',
             'hasErrors'
@@ -88,15 +92,19 @@ export default {
         this.yaml = this.$store.state.manager.currentYaml;  
     },
     methods: {
+        ...mapActions([
+            VALIDATE_YAML,            
+        ]),
+        ...mapMutations([
+            CHANGE_YAML_VISIBILITY,
+        ]),
         showYaml() {
           $('.yamlForm').transition('slide down');
-          this.$store.commit('manager/CHANGE_YAML_VISIBILITY');
+          this.CHANGE_YAML_VISIBILITY();
         },
 
         onYamlChange: _.throttle(function (e) {
-            console.log("onYamlChange");
-            console.log(this.yaml);
-            if(this.yaml !== '' || isNaN(this.yaml)) this.$store.dispatch('manager/VALIDATE_YAML', this.yaml).catch(console.log);
+            if(this.yaml !== '' || isNaN(this.yaml)) this.VALIDATE_YAML(this.yaml).catch(console.log);
         }, 3000)  
     },
 }

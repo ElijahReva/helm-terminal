@@ -1,65 +1,92 @@
+<!--suppress ALL -->
 <template lang="html">
   <div class="ui inverted borderless main menu">
     <div class="ui container">
       <div class="right menu">
+        <div class="ui item inline loader"  v-if="isRequestInProgress" />
         <div class="ui item left aligned header">{{ title }}</div>
         <div class="item">Kubernetes Context</div>
-        <div class="ui item search selection dropdown" ref="dropdown">
-          <input type="hidden" name="country" v-model="currentContext">
-          <i class="dropdown icon"></i>
-          <div class="default text">Select Context</div>
-          <div class="menu">
-              <div
+        <select v-model="currentContext" class="ui item search selection dropdown">
+              <option
                   v-for="context in contexts"
-                  v-bind:data-value="context"
+                  :value="context.name"
+                  :key="context.name"
                   class="item">
-                {{ context }}
-              </div>
-          </div>
-        </div>
-        <div class="ui item search aligned selection dropdown" ref="dropdown1">
-          <input type="hidden" name="country">
-          <i class="dropdown icon"></i>
-          <div class="default text">Select Namespace</div>
-          <div class="menu">
-            <div class="item" data-value="af"><i class="af flag"></i>Afghanistan</div>
-            <div class="item" data-value="zm"><i class="zm flag"></i>Zambia</div>   
-            <div class="item" data-value="zw"><i class="zw flag"></i>Zimbabwe</div>
-          </div>
-        </div>
+                
+                  {{ context.name }}
+                
+              </option >
+        </select>        
+        <select v-model="currentNamespace" id="namespace-dropbox" class="ui item search selection dropdown">
+          <option
+                  v-for="ns in namespaces"
+                  :value="ns"
+                  :key="ns"
+                  class="item">
+            
+            {{ ns }}
+
+          </option >
+        </select>        
         <div class="item">Kubernetes Namespace</div>
       </div>
     </div>
   </div>
 </template>
-
 <script>
-import { createNamespacedHelpers } from 'vuex'
+    import { mapState, mapActions } from 'vuex'
+    import { 
+        REQUEST_CONTEXTS,
+        SET_CONTEXT,
+        SET_NAMESPACE,
+    } from "../store/rootConstants";
+    import JQuery from 'jquery'
+    
+    let $ = JQuery;    
 
-import JQuery from 'jquery'
-let $ = JQuery;
+    export default {
+        name: 'Header',
+        props: [ 'title' ],
+        computed: {
+            currentNamespace: {
+                get() { return this.$store.state.currentNamespace; },
+                set(value) { this.$store.commit(SET_NAMESPACE, value); },
+            },
 
-const { mapState, mapActions } = createNamespacedHelpers('signalr');
+            currentContext: {
+                get() { return this.$store.state.currentContext; },
+                set(value) { this.$store.commit(SET_CONTEXT, value); },
+            },
+            
+            ...mapState([
+                'isRequestInProgress',
+                'contexts',
+                'namespaces',
+            ]),
+            // ...mapGetters('manager', [
+            //     'yamlButtonColor',
+            //     'yamlButtonText',
+            //     'hasErrors'
+            // ])
+        },
+    
+        created() {
+            this.$store.dispatch(REQUEST_CONTEXTS)
+        },
 
-export default {
-    name: 'Header',
-    props: [ 'title' ],
-    data(){
-      return {
-          contexts: ['1','2','3'],
-          currentContext: null,
-      }  
-    },
-    mounted() {
-        $('.ui.dropdown').dropdown();                
-        
-        // this.$nextTick(function () {
-        //     this.$refs.dropdown.dropdown(); 
-        //     this.$refs.dropdown1.dropdown(); 
-        // });
+        mounted() {
+            $('.ui.dropdown').dropdown();
+        },
+
+        watch: {
+            currentContext: function(event) {
+                $('#namespace-dropbox').dropdown('set text', "<i class=\"af flag\"></i> 11");
+                $('#namespace-dropbox').dropdown('set value', '11');
+            }
+        }
     }
-}
 </script>
+
 
 <style scoped>
   .ui.container {

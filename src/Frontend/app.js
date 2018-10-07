@@ -20,9 +20,6 @@ Logger.setLevel(Logger.DEBUG);
 
 
 
-
-
-
 Vue.use(VueCodemirror);
 
 Vue.config.errorHandler = function(err) {

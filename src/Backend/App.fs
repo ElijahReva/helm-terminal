@@ -25,15 +25,35 @@ module App =
     open System.Threading.Tasks
     open System
     open Giraffe
+    open Giraffe.HttpStatusCodeHandlers.RequestErrors
+    open Microsoft.AspNetCore.Http
+    open Newtonsoft.Json
 
-    
+    let private badRequest (ctx: HttpContext)  =
+        fun error ->
+            ctx.SetStatusCode 400
+            error
+            |> ctx.WriteJsonAsync
+
+    let private fromOption (ctx: HttpContext) =
+        fun opt -> 
+            match opt with 
+            | Some i -> i |> ctx.WriteJsonAsync
+            | None -> "" |> badRequest ctx 
+
+
     let private getKubeContexts : HttpHandler =
-        fun next ctx ->        
-             DOM.getContexts() |> ctx.WriteJsonAsync
+        fun next ctx ->              
+             DOM.getContexts () |> fromOption ctx
+             
+    let private getKubeNamespaces : HttpHandler =
+        fun next ctx ->
+            kube "." "get ns -o json" |> JsonConvert.DeserializeObject |> ctx.WriteJsonAsync
+            
               
     let private runAction : HttpHandler =
         fun next ctx ->        
-             DOM.getContexts() |> ctx.WriteJsonAsync
+             kube "." "get ns -o json" |> ctx.WriteJsonAsync
               
               
     let private currentSchema : HttpHandler =
@@ -51,6 +71,7 @@ module App =
                     api "/api" [                    
                         route "/current" >=> currentSchema                        
                         route "/contexts" >=> getKubeContexts                     
+                        route "/namespaces" >=> getKubeNamespaces                     
                     ]
                 ]
             POST >=> 
