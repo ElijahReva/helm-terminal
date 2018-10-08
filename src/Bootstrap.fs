@@ -24,11 +24,7 @@ module Bootstrap =
     open Serilog.Events  
     open System.Diagnostics
     
-    type ServerError =    
-        {
-            Message: string
-            Stack: string
-        }
+
     
     let errorHandler (ex : Exception) (logger : Logging.ILogger) =
         Log.Error(ex, "An unhandled exception has occurred while executing the request. {EventId}", Logging.EventId())

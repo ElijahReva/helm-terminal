@@ -1,5 +1,30 @@
 namespace Helm.Terminal.Server
 
+open System.Diagnostics
+
+type ServerError =    
+    {
+        Message: string
+        Stack: string
+    }
+    
+type WebError = 
+    | Client of string
+    | Server of ServerError
+
+
+module Result = 
+    let inline tryUsing f x =
+        try
+            x |> f |> Ok
+        with 
+        | _ as ex -> 
+            let ex = ex.Demystify()
+            { Message = ex.Message; Stack = ex.StackTrace} |> Server |> Error      
+        
+    let inline fromStringError x = Result.mapError Client x    
+
+
 [<AutoOpen>]
 module DOM =
 
@@ -33,6 +58,15 @@ module DOM =
     type KubeNamespace = 
         {
             name: string        
+        }
+                
+    [<CLIMutable>]
+    type YamlRequest = 
+        {
+            ``namespace``: string        
+            context: string        
+            chart: string        
+            fromRelease: string        
         }
      
     [<CLIMutable>]
@@ -72,7 +106,7 @@ module DOM =
     let helm = runCmd "helm"
     let kube = runCmd "kubectl"
         
-    let getContexts() : KubeContext list option =
+    let getContexts() =
         let getCtx json : KubeContext list =
             let contexts = 
                 [
@@ -88,8 +122,8 @@ module DOM =
     
         "config view -o json" 
         |> kube "."  
-        |> JsonValue.TryParse
-        |> Option.map getCtx
+        |> Result.tryUsing JsonValue.Parse
+        |> Result.map getCtx
             
     let getNamespaces context =
         let toNamespaces json : KubeNamespace list =
@@ -100,8 +134,8 @@ module DOM =
         context    
         |> sprintf "get ns -o json --context %s"         
         |> kube "." 
-        |> JsonValue.Parse
-        |> toNamespaces
+        |> Result.tryUsing JsonValue.Parse
+        |> Result.map toNamespaces
         
             
     let getCharts context ns =
@@ -125,7 +159,7 @@ module DOM =
         if String.isNullOrEmpty output then 
             List.empty
         else 
-            output |> JsonValue.Parse |> toCharts
+            output |> Result.tryUsing JsonValue.Parse |> Result.map toCharts
   
     [<CLIMutable>]
     type KubeSettings = 

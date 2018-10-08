@@ -20,7 +20,9 @@ type ManagerHub() =
            base.OnDisconnectedAsync(ex)
 
 
+
 module App =
+    open FSharp.Data
     open System.Threading.Tasks
     open System.Threading.Tasks
     open System
@@ -28,38 +30,56 @@ module App =
     open Giraffe.HttpStatusCodeHandlers.RequestErrors
     open Microsoft.AspNetCore.Http
     open Newtonsoft.Json
-
-    let private badRequest (ctx: HttpContext)  =
-        fun error ->
+    
+    module Result =    
+        let private badRequest (ctx: HttpContext) error =
             ctx.SetStatusCode 400
-            error
-            |> ctx.WriteJsonAsync
-
-    let private fromOption (ctx: HttpContext) =
-        fun opt -> 
-            match opt with 
-            | Some i -> i |> ctx.WriteJsonAsync
-            | None -> "" |> badRequest ctx 
+            ctx.WriteJsonAsync error
+            
+        let private serverError (ctx: HttpContext) error =
+            ctx.SetStatusCode 500
+            ctx.WriteJsonAsync error
+                                     
+        let writeJson (ctx: HttpContext) result =        
+            match result with 
+            | Ok result -> result |> ctx.WriteJsonAsync
+            | Error err -> 
+                match err with 
+                | Client err -> badRequest ctx err
+                | Server err -> serverError ctx err
+                                                     
+        let inline getQuery (ctx: HttpContext) = ctx.GetQueryStringValue >> Result.fromStringError 
 
 
     let private getKubeContexts : HttpHandler =
         fun next ctx ->              
-             DOM.getContexts () |> fromOption ctx
+             DOM.getContexts () |> Result.writeJson ctx
              
     let private getKubeNamespaces : HttpHandler =
         fun next ctx ->
-            ctx.TryGetQueryStringValue "context"
-            |> Option.map getNamespaces 
-            |> fromOption ctx
+            "context"
+            |> Result.getQuery ctx             
+            |> Result.map getNamespaces 
+            |> Result.writeJson ctx
             
               
     let private getHelmCharts : HttpHandler =
-        fun next ctx ->        
-             ctx.TryGetQueryStringValue "context"
-             |> Option.bind (fun x -> ctx.TryGetQueryStringValue "namespace"|> Option.map (fun y -> x, y))
-             |> Option.map (fun (c, n) -> getCharts c n)  
-             |> fromOption ctx            
+        fun next ctx ->
+            "context"
+            |> Result.getQuery ctx
+            |> Result.bind (fun x -> "namespace" |> Result.getQuery ctx |> Result.map (fun y -> x, y))
+            |> Result.map (fun (c, n) -> getCharts c n)  
+            |> Result.writeJson ctx            
               
+    let private getHelmYaml : HttpHandler =
+        fun next ctx ->
+            ctx.ReadBodyFromRequestAsync() 
+            |> Async.AwaitTask
+            |> Async.RunSynchronously
+            |> Result.tryUsing JsonValue.Parse
+            |> Result.bind (fun json -> json |> Result.tryUsing (fun j -> j?))  
+            |> Result.writeJson ctx
+                       
     let private runAction : HttpHandler =
         fun next ctx ->        
              kube "." "get ns -o json" |> ctx.WriteJsonAsync
@@ -81,7 +101,8 @@ module App =
                         route "/charts" >=> getHelmCharts                           
                         route "/current" >=> currentSchema                        
                         route "/contexts" >=> getKubeContexts                     
-                        route "/namespaces" >=> getKubeNamespaces             
+                        route "/namespaces" >=> getKubeNamespaces          
+                        route "/yaml" >=> getHelmYaml          
                     ]
                 ]
             POST >=> 
