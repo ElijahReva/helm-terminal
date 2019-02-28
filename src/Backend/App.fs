@@ -77,7 +77,7 @@ module App =
             |> Async.AwaitTask
             |> Async.RunSynchronously
             |> Result.tryUsing JsonValue.Parse
-            |> Result.bind (fun json -> json |> Result.tryUsing (fun j -> j?))  
+            |> Result.bind (fun json -> json |> Result.tryUsing (fun j -> j))  
             |> Result.writeJson ctx
                        
     let private runAction : HttpHandler =

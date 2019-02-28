@@ -66,7 +66,7 @@ export const actions = {
         api.getCharts(rootState.api, rootState.currentContext, rootState.currentNamespace)
             .then(resp => {
                 commit(SET_CHARTS, resp.data);
-                dispatch(SELECT_CHART, resp.data[0].name);
+                dispatch(SELECT_CHART, resp.data.fields[0][0].name);
             })
             .catch(err => console.log(err))
         

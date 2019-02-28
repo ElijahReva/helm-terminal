@@ -106,7 +106,7 @@ export default {
 
         onYamlChange: _.throttle(function (e) {
             if(this.yaml !== '' || isNaN(this.yaml)) this.VALIDATE_YAML(this.yaml).catch(console.log);
-        }, 3000)  
+        }, 50)  
     },
 }
 </script>

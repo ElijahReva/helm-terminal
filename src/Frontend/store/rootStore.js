@@ -127,7 +127,7 @@ export const actions = {
                 commit(UPDATE_CONTEXTS, resp.data);
                 // if resp data has no old context select first
                 // if currentCtx = null select first
-                commit(SET_CONTEXT, resp.data[0].name);
+                commit(SET_CONTEXT, resp.data[1].name);
             })
             .catch(err => console.log(err));
         // commit(REQUEST_IN_PROGRESS, false);       
@@ -138,7 +138,7 @@ export const actions = {
         api.getNamespaces(state.api, state.currentContext)
             .then(resp => {
                 commit(UPDATE_NAMESPACES, resp.data);
-                dispatch(SET_NAMESPACE, resp.data[0].name);
+                dispatch(SET_NAMESPACE, resp.data.fields[0][0].name);
             })
             .catch(err => console.log(err));
     },

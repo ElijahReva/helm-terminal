@@ -157,9 +157,11 @@ module DOM =
         
         
         if String.isNullOrEmpty output then 
-            List.empty
+            List.empty |> Ok
         else 
-            output |> Result.tryUsing JsonValue.Parse |> Result.map toCharts
+            output 
+            |> Result.tryUsing JsonValue.Parse 
+            |> Result.map toCharts
   
     [<CLIMutable>]
     type KubeSettings = 
